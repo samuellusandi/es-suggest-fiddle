@@ -1,0 +1,45 @@
+version: "3"
+
+services:
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_DB: documents_data
+      POSTGRES_USER: documents_manager
+      POSTGRES_PASSWORD: documents_manager
+    volumes:
+      - ./data/postgresql/data:/var/lib/postgresql/data
+      - ./scripts/db/:/docker-entrypoint-initdb.d/
+    restart: unless-stopped
+    ports:
+      - 5432:5432
+    networks:
+      app:
+        ipv4_address: 172.16.0.2
+  
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.5.1
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - cluster.routing.allocation.disk.threshold_enabled=false
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - ./data/elasticsearch:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    networks:
+      app:
+        ipv4_address: 172.16.0.3
+
+networks:
+  app:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.16.0.0/29
