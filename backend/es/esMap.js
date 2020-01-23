@@ -55,8 +55,8 @@ async function syncDatabase() {
     console.log('Syncing data for articles.');
     const res = await dbClient.query('SELECT * FROM articles;');
     
-    res.rows.forEach((row) => {
-        esClient.index({
+    res.rows.forEach(async (row) => {
+        await esClient.index({
             index: 'articles',
             body: {
                 author: row.author,
@@ -73,10 +73,22 @@ async function syncDatabase() {
     console.log();
 }
 
+// Reindex to make sure the data is refreshed
+async function reindexAll() {
+    console.log('Refreshing indices to ensure data is commited.');
+    console.log('======================================');
+
+    console.log('Refreshing articles index...');
+    await esClient.indices.refresh({ index: 'articles' });
+
+    console.log();
+}
+
 async function doReindex() {
     await cleanES();
     await createES();
-    await syncDatabase(); 
+    await syncDatabase();
+    await reindexAll();
 }
 
 doReindex().then(() => {

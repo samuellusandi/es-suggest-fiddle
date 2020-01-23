@@ -25,7 +25,7 @@ export class SearchArticleService {
             body: {
                 query: {
                     match: {
-                        'title.raw': {
+                        title: {
                             operator: 'and',
                             query: title,
                         },
@@ -38,8 +38,8 @@ export class SearchArticleService {
                             field: 'title',
                             gram_size: 3,
                             highlight: {
-                                post_tag: '</b>',
-                                pre_tag: '<b>',
+                                post_tag: '}>',
+                                pre_tag: '<{',
                             },
                             max_errors: 0.5,
                             real_word_error_likelihood: 0.95,
@@ -49,12 +49,13 @@ export class SearchArticleService {
                 },
             },
         });
-        // TODO: Search Article By Title + Parse Suggest
+        const articles = this.parseService.parseArticlesFromESBody(result.body);
+        const suggestions = this.parseService.parseSuggestionsFromESBody(result.body, title);
         return {
-            content: [],
+            content: articles,
             meta: {
-                count: 0,
-                suggest: [],
+                count: result.body.hits.total.value,
+                suggest: suggestions,
             },
         };
     }

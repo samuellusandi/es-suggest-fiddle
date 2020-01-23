@@ -7,9 +7,13 @@ module.exports = {
                     number_of_shards: 1,
                     analysis: {
                         analyzer: {
-                            trigram: {
+                            title_analyzer: {
                                 type: 'custom',
                                 tokenizer: 'standard',
+                                token_chars: [
+                                   'letter',
+                                   'digit',
+                                ],
                                 filter: [
                                     'lowercase',
                                     'shingle',
@@ -41,7 +45,7 @@ module.exports = {
                     fields: {
                         suggest: {
                             type: 'text',
-                            analyzer: 'trigram',
+                            analyzer: 'title_analyzer',
                         },
                         raw: {
                             type: 'keyword',
