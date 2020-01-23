@@ -1,0 +1,39 @@
+{
+  "defaultSeverity": "error",
+  "extends": ["tslint:recommended"],
+  "linterOptions": {
+    "exclude": [
+      "src/migrations/*"
+    ]
+  },
+  "jsRules": {
+    "no-unused-expression": true
+  },
+  "rules": {
+    "quotemark": [true, "single"],
+    "member-access": [true],
+    "ordered-imports": [true],
+    "max-line-length": [true, 150],
+    "member-ordering": [
+      true,
+      {
+        "order": [
+          "public-static-field",
+          "private-static-field",
+          "public-instance-field",
+          "private-instance-field",
+          "public-constructor",
+          "private-constructor",
+          "public-instance-method",
+          "protected-instance-method",
+          "private-instance-method"
+        ],
+        "alphabetize": true
+      }
+    ],
+    "interface-name": [false],
+    "arrow-parens": true,
+    "object-literal-sort-keys": true
+  },
+  "rulesDirectory": []
+}

@@ -1,0 +1,34 @@
+type Article {
+    id: String!
+    title: String!
+    author: String!
+    document: String!
+    createdAt: String!
+}
+
+type ArticleSearchMeta {
+    suggest: [String]!
+    count: Int!
+}
+
+type ArticleSearchResult {
+    content: [Article]!
+    meta: ArticleSearchMeta!
+}
+
+type Query {
+    readManyArticles(limit: Int): [Article]!
+    readArticleById(id: String): Article
+    searchArticle(title: String!): ArticleSearchResult!
+}
+
+type Mutation {
+    createArticle(title: String!, author: String!, document: String!): Article
+    updateArticle(
+        id: String!,
+        title: String,
+        author: String,
+        document: String
+    ): Article
+    deleteArticle(id: String!): Int
+}
