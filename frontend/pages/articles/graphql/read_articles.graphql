@@ -1,0 +1,21 @@
+query readArticles($offset: Int, $limit: Int) {
+    readManyArticles(offset: $offset, limit: $limit) {
+        id
+        title
+        author
+        document
+        createdAt
+        updatedAt
+    }
+}
+
+query readArticleById($id: String!) {
+    readArticleById(id: $id) {
+        id
+        title
+        author
+        document
+        createdAt
+        updatedAt
+    }
+}

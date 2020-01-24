@@ -18,8 +18,11 @@ export class ArticleQueryResolver {
     }
 
     @Query()
-    public async readManyArticles(@Args('limit') limit?: number): Promise<Article[]> {
-        return this.readArticleService.readMany(limit);
+    public async readManyArticles(
+        @Args('offset') offset?: number,
+        @Args('limit') limit?: number,
+    ): Promise<Article[]> {
+        return this.readArticleService.readMany(offset, limit);
     }
 
     @Query()

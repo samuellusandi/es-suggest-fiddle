@@ -20,16 +20,20 @@ export class ReadArticleService {
         this.esClient = esService.getClient();
     }
 
-    public async readMany(limit?: number): Promise<Article[]> {
-        limit = this.limitBetween(limit, 5, 20);
+    public async readMany(offset?: number, limit?: number): Promise<Article[]> {
+        limit = this.limitBetween(limit, 1, 20);
         const result: ApiResponse = await this.esClient.search({
+            from: offset,
             index: ARTICLES_INDEX,
             size: limit,
         });
         if (result.statusCode === 200) {
             return this.parseService.parseArticlesFromESBody(result.body);
         }
-        return this.articleRepository.find({take: limit || 5});
+        return this.articleRepository.find({
+            skip: offset || 0,
+            take: limit || 5,
+        });
     }
 
     public async readOneById(id: string): Promise<Article | null> {
