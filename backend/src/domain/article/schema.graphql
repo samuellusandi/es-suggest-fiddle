@@ -30,12 +30,12 @@ type Query {
 }
 
 type Mutation {
-    createArticle(title: String!, author: String!, document: String!): Article
+    createArticle(title: String!, author: String!, document: String!): Article!
     updateArticle(
         id: String!,
         title: String,
         author: String,
         document: String
-    ): Article
-    deleteArticle(id: String!): Int
+    ): Article!
+    deleteArticle(id: String!): Int!
 }

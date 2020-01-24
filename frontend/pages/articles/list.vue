@@ -73,7 +73,7 @@
 </template>
 
 <script>
-import readArticles from './graphql/read_articles'
+import articleQueries from './graphql/article_queries'
 
 export default {
   data() {
@@ -92,7 +92,7 @@ export default {
     getArticles(offset, limit) {
       this.$apollo
         .query({
-          query: readArticles.readArticles,
+          query: articleQueries.readArticles,
           variables: {
             offset,
             limit
@@ -126,7 +126,7 @@ export default {
       this.suggestions = []
       this.$apollo
         .query({
-          query: readArticles.autoComplete,
+          query: articleQueries.autoComplete,
           variables: {
             prefix: this.prefix
           }

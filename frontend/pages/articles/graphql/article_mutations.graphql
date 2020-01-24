@@ -1,0 +1,5 @@
+mutation createArticle($title: String!, $author: String!, $document: String!) {
+    createArticle(title: $title, author: $author, document: $document) {
+        id
+    }
+}

@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import readArticles from './graphql/read_articles'
+import articleQueries from './graphql/article_queries'
 
 export default {
   data() {
@@ -50,7 +50,7 @@ export default {
     readArticleById(id) {
       this.$apollo
         .query({
-          query: readArticles.readArticleById,
+          query: articleQueries.readArticleById,
           variables: { id }
         })
         .then((data) => {
