@@ -31,7 +31,7 @@ export class SearchArticleService {
                             'titleCompletion._2gram',
                             'titleCompletion._3gram',
                         ],
-                        query: 'the roses wind',
+                        query: prefix,
                         type: 'bool_prefix',
                     },
                 },
