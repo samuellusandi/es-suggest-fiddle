@@ -24,17 +24,20 @@ export class SearchArticleService {
     public async autocompleteTitle(prefix: string): Promise<TitleSearchUtility[]> {
         const result: ApiResponse = await this.esClient.search({
             body: {
-                suggest: {
-                    title_suggest: {
-                        completion: {
-                            field: 'titleCompletion',
-                        },
-                        prefix,
+                query: {
+                    multi_match: {
+                        fields: [
+                            'titleCompletion',
+                            'titleCompletion._2gram',
+                            'titleCompletion._3gram',
+                        ],
+                        query: 'the roses wind',
+                        type: 'bool_prefix',
                     },
                 },
             },
         });
-        return this.parseService.parseArticlesFromESCompletionField(result.body);
+        return this.parseService.parseArticlesFromESBody(result.body);
     }
 
     public async searchArticleByTitle(title: string): Promise<WithSearchMeta<Article>> {
