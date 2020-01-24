@@ -2,6 +2,7 @@ import { Args, Query, Resolver } from '@nestjs/graphql';
 
 import { WithSearchMeta } from '../../../core/helpers/search.meta';
 import { Article } from '../entities/article.entity';
+import { TitleSearchUtility } from '../entities/search_utility';
 import { ReadArticleService } from '../services/article.read.service';
 import { SearchArticleService } from '../services/article.search.service';
 
@@ -12,9 +13,14 @@ export class ArticleQueryResolver {
         private searchArticleService: SearchArticleService,
     ) {}
 
+    @Query()
+    public async autoCompleteTitle(@Args('prefix') prefix: string): Promise<TitleSearchUtility[]> {
+        return await this.searchArticleService.autocompleteTitle(prefix);
+    }
+
     @Query((_) => Article)
     public async readArticleById(@Args('id') id: string): Promise<Article | null> {
-        return this.readArticleService.readOneById(id);
+        return await this.readArticleService.readOneById(id);
     }
 
     @Query()
@@ -22,11 +28,11 @@ export class ArticleQueryResolver {
         @Args('offset') offset?: number,
         @Args('limit') limit?: number,
     ): Promise<Article[]> {
-        return this.readArticleService.readMany(offset, limit);
+        return await this.readArticleService.readMany(offset, limit);
     }
 
     @Query()
     public async searchArticle(@Args('title') title: string): Promise<WithSearchMeta<Article>> {
-        return this.searchArticleService.searchArticleByTitle(title);
+        return await this.searchArticleService.searchArticleByTitle(title);
     }
 }

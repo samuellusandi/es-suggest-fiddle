@@ -63,6 +63,7 @@ async function syncDatabase() {
                 document: row.document,
                 createdAt: row.created_at,
                 updatedAt: row.updated_at,
+                titleCompletion: row.title.split(/\s+/),
                 title: row.title,
                 id: row.id,
             },

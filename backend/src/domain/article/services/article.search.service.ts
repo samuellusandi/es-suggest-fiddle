@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 import { ESSearchService } from '../../../core/es/services/es.service';
 import { WithSearchMeta } from '../../../core/helpers/search.meta';
 import { Article } from '../entities/article.entity';
+import { TitleSearchUtility } from '../entities/search_utility';
 import { ParseArticleService } from './article.parse.service';
 
 @Injectable()
@@ -18,6 +19,22 @@ export class SearchArticleService {
         esService: ESSearchService,
     ) {
         this.esClient = esService.getClient();
+    }
+
+    public async autocompleteTitle(prefix: string): Promise<TitleSearchUtility[]> {
+        const result: ApiResponse = await this.esClient.search({
+            body: {
+                suggest: {
+                    title_suggest: {
+                        completion: {
+                            field: 'titleCompletion',
+                        },
+                        prefix,
+                    },
+                },
+            },
+        });
+        return this.parseService.parseArticlesFromESCompletionField(result.body);
     }
 
     public async searchArticleByTitle(title: string): Promise<WithSearchMeta<Article>> {
@@ -38,8 +55,8 @@ export class SearchArticleService {
                             field: 'title',
                             gram_size: 3,
                             highlight: {
-                                post_tag: '}>',
-                                pre_tag: '<{',
+                                post_tag: '[',
+                                pre_tag: ']',
                             },
                             max_errors: 0.5,
                             real_word_error_likelihood: 0.95,

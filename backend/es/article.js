@@ -5,6 +5,7 @@ module.exports = {
             settings: {
                 index: {
                     number_of_shards: 1,
+                    max_ngram_diff: 18,
                     analysis: {
                         analyzer: {
                             title_analyzer: {
@@ -19,12 +20,30 @@ module.exports = {
                                     'shingle',
                                 ],
                             },
+                            autocomplete: {
+                                type: 'custom',
+                                tokenizer: 'whitespace',
+                                filter: [
+                                    'lowercase',
+                                    'asciifolding',
+                                    'nGramFilter',
+                                ],
+                            },
                         },
                         filter: {
                             shingle: {
                                 type: 'shingle',
                                 min_shingle_size: 2,
                                 max_shingle_size: 3,
+                            },
+                            nGramFilter: {
+                                type: 'nGram',
+                                min_gram: 2,
+                                max_gram: 10,
+                                token_chars: [
+                                    'letter',
+                                    'digit',
+                                ],
                             },
                         },
                     },
@@ -51,6 +70,10 @@ module.exports = {
                             type: 'keyword',
                         },
                     }
+                },
+                titleCompletion: {
+                    type: 'completion',
+                    analyzer: 'autocomplete',
                 },
                 createdAt: { type: 'date' },
                 updatedAt: { type: 'date' },

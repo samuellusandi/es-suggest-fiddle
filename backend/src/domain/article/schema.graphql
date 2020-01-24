@@ -17,10 +17,16 @@ type ArticleSearchResult {
     meta: ArticleSearchMeta!
 }
 
+type TitleSuggestionResult {
+    title: String!
+    id: String!
+}
+
 type Query {
     readManyArticles(offset: Int, limit: Int): [Article]!
     readArticleById(id: String!): Article
     searchArticle(title: String!): ArticleSearchResult!
+    autoCompleteTitle(prefix: String!): [TitleSuggestionResult]!
 }
 
 type Mutation {

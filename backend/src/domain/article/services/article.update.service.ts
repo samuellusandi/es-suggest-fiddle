@@ -34,6 +34,7 @@ export class UpdateArticleService {
         if (title) {
             article.title = title;
             script.push(`ctx._source.title='${title}'`);
+            script.push(`ctx._source.titleCompletion='${title.split(/\s+/)}'`);
             changed = true;
         }
         if (author) {

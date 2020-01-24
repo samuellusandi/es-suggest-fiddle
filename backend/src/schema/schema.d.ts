@@ -34,4 +34,10 @@ export interface IQuery {
     readManyArticles(offset?: number, limit?: number): Article[] | Promise<Article[]>;
     readArticleById(id: string): Article | Promise<Article>;
     searchArticle(title: string): ArticleSearchResult | Promise<ArticleSearchResult>;
+    autoCompleteTitle(prefix: string): TitleSuggestionResult[] | Promise<TitleSuggestionResult[]>;
+}
+
+export interface TitleSuggestionResult {
+    title: string;
+    id: string;
 }

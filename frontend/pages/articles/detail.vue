@@ -68,6 +68,10 @@ export default {
             updatedAt: doc.updatedAt
           }
         })
+        .catch((err) => {
+          this.article = null
+          throw err
+        })
     }
   }
 }

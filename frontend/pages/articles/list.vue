@@ -3,6 +3,24 @@
     <div>
       List all Articles and Search
     </div>
+    <div class="my-5">
+      <input
+        v-on:input="getSuggestions"
+        v-model="prefix"
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        type="text"
+        placeholder="Start Typing for Completion"
+      />
+      <div class="my-3">Search results:</div>
+      <div v-for="suggestion in suggestions" v-bind:key="suggestion.i">
+        <nuxt-link
+          :to="'/articles/detail?id=' + suggestion.id"
+          class="text-blue-500"
+        >
+          {{ suggestion.title }}
+        </nuxt-link>
+      </div>
+    </div>
     <div class="my-5 flex items-center justify-center container">
       <table
         class="w-full flex flex-row flex-no-wrap sm:bg-white rounded-lg overflow-hidden sm:shadow-lg my-5"
@@ -13,7 +31,7 @@
             v-bind:key="n"
             class="bg-gray-800 flex flex-col flex-no wrap sm:table-row rounded-l-lg sm:rounded-none mb-2 sm:mb-0"
           >
-            <th class="p-3">Article ID (First 10)</th>
+            <th class="p-3">Article ID</th>
             <th class="p-3">Article Title</th>
             <th class="p-3">Article Author</th>
             <th class="p-3">Article Content Preview</th>
@@ -61,6 +79,8 @@ export default {
   data() {
     return {
       articles: [],
+      prefix: '',
+      suggestions: [],
       offset: 0,
       limit: 5
     }
@@ -101,6 +121,27 @@ export default {
         modified += '...'
       }
       return modified
+    },
+    getSuggestions() {
+      this.suggestions = []
+      this.$apollo
+        .query({
+          query: readArticles.autoComplete,
+          variables: {
+            prefix: this.prefix
+          }
+        })
+        .then((data) => {
+          data = data.data.autoCompleteTitle
+          const maxSuggestion = data.length > 5 ? 5 : data.length
+          for (let i = 0; i < maxSuggestion; ++i) {
+            this.suggestions.push({
+              i,
+              id: data[i].id,
+              title: data[i].title
+            })
+          }
+        })
     }
   }
 }

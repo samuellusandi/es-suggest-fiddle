@@ -19,3 +19,10 @@ query readArticleById($id: String!) {
         updatedAt
     }
 }
+
+query autoComplete($prefix: String!) {
+    autoCompleteTitle(prefix: $prefix) {
+        id
+        title
+    }
+}
