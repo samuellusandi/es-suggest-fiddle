@@ -23,6 +23,11 @@ export class ReadArticleService {
     public async readMany(offset?: number, limit?: number): Promise<Article[]> {
         limit = this.limitBetween(limit, 1, 20);
         const result: ApiResponse = await this.esClient.search({
+            body: {
+                sort: [
+                    { createdAt: 'desc' },
+                ],
+            },
             from: offset,
             index: ARTICLES_INDEX,
             size: limit,

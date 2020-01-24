@@ -27,7 +27,7 @@ export class CreateArticleService {
                 document: article.document,
                 id: article.id,
                 title: article.title,
-                titleCompletion: article.title.split(/\s+/),
+                titleCompletion: [article.title, ...article.title.split(/\s+/)],
                 updatedAt: article.updatedAt,
             },
             index: ARTICLES_INDEX,
