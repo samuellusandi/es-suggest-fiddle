@@ -26,3 +26,19 @@ query autoComplete($prefix: String!) {
         title
     }
 }
+
+query searchArticle($title: String!) {
+    searchArticle(title: $title) {
+        content {
+            id
+            title
+            author
+            document
+            createdAt
+            updatedAt
+        }
+        meta {
+            suggest
+        }
+    }
+}

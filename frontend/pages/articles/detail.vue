@@ -2,15 +2,15 @@
   <div class="container mx-auto py-4">
     <div v-if="article !== null">
       <h1 class="text-6xl text-center">
-        {{ article.title }}
+        <span v-html="article.title" />
       </h1>
       <div class="info py-2">
-        <p>Written by {{ article.author }}</p>
+        <p>Written by <span v-html="article.author" /></p>
         <p>Created at {{ article.createdAt }}</p>
         <p>Last updated at {{ article.updatedAt }}</p>
       </div>
       <div class="content">
-        {{ article.document }}
+        <span v-html="article.document" />
       </div>
       <div class="info pt-5">
         <p>Article ID: {{ article.id }}</p>

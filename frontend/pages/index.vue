@@ -6,10 +6,10 @@
       </h1>
       <div class="break-words">
         My personal playground for fiddling with elasticsearch and its
-        search/suggest features. Past this page, you can create articles (all in
-        plain text, no images). Help me gather (read: create) more random
-        articles so I can improve the search algorithm (and/or parameter) of the
-        search by creating as many articles (read: data) as you can!
+        search/suggest features. Past this page, you can create articles (in
+        HTML). Help me gather (read: create) more random articles so I can
+        improve the search algorithm (and/or parameter) of the search by
+        creating as many articles (read: data) as you can!
       </div>
       <div class="break-words text-xs mt-2">
         P.S. Things <i>will</i> break here. I will only fix them at a
