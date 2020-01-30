@@ -20,9 +20,11 @@ export class InternalError extends Error {
 
 export const internalFormatError = (err: GraphQLError) => {
     const originalError: any = err.originalError;
-    return {
-        key: originalError.key || undefined,
-        message: originalError.message.error || originalError.message || 'An error was found.',
-        status: originalError.statusCode || originalError.status || HttpStatus.INTERNAL_SERVER_ERROR,
-    };
+    return originalError
+        ? {
+            key: originalError.key || undefined,
+            message: originalError.message.error || originalError.message || 'An error was found.',
+            status: originalError.statusCode || originalError.status || HttpStatus.INTERNAL_SERVER_ERROR,
+        }
+        : err;
 };

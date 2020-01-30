@@ -8,7 +8,7 @@ type Article {
 }
 
 type ArticleSearchMeta {
-    suggest: [String]!
+    suggest: String
     count: Int!
 }
 

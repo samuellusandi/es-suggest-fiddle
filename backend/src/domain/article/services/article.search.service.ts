@@ -44,28 +44,15 @@ export class SearchArticleService {
         const result: ApiResponse = await this.esClient.search({
             body: {
                 query: {
-                    match: {
-                        title: {
-                            operator: 'and',
-                            query: title,
-                        },
-                    },
+                    match: { title },
                 },
                 suggest: {
                     suggest_title: {
-                        phrase: {
-                            confidence: 0.9,
+                        term: {
                             field: 'title',
-                            gram_size: 3,
-                            highlight: {
-                                post_tag: '[',
-                                pre_tag: ']',
-                            },
-                            max_errors: 0.5,
-                            real_word_error_likelihood: 0.95,
                         },
+                        text: title,
                     },
-                    text: title,
                 },
             },
         });

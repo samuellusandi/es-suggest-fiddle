@@ -1,4 +1,8 @@
+import * as sanitize from 'sanitize-html';
+
 import { Injectable } from '@nestjs/common';
+
+import { allowCleanTagsRule, noHtmlRule } from '../../../core/helpers/sanitize_rules';
 import { Article } from '../entities/article.entity';
 import { TitleSearchUtility } from '../entities/search_utility';
 
@@ -28,35 +32,30 @@ export class ParseArticleService {
         return articles;
     }
 
-    public parseSuggestionsFromESBody(body: any, original: string): string[] {
-        const suggests = body.suggest.suggest_title[0].options;
-        // Split by whitespace, this is going to be our base of replacements.
-        const suggestions = original.split(/\s+/);
-        suggests.slice()
-            .reverse()
-            .forEach((suggestion: any) => {
-                const highlightedOptions = suggestion.highlighted.split(/\s+/);
-                // tslint:disable-next-line: prefer-for-of
-                for (let i = 0; i < highlightedOptions.length; ++i) {
-                    if (highlightedOptions[i].startsWith('[') &&
-                        highlightedOptions[i].endsWith(']')) {
-                        suggestions[i] = highlightedOptions[i].substring(
-                            2,
-                            highlightedOptions[i].length - 2,
-                        );
-                    }
-                }
-            });
-        return [suggestions.join(' ')];
+    public parseSuggestionsFromESBody(body: any, original: string): string | null {
+        const suggestion = original.split(' ');
+        const suggests = body.suggest.suggest_title;
+
+        let hasSuggestions = false;
+        suggests.forEach((suggest: any, index: number) => {
+            if (suggest.options.length) {
+                suggestion[index] = suggest
+                    .options[0]
+                    .text;
+                hasSuggestions = true;
+            }
+        });
+
+        return hasSuggestions ? suggestion.join(' ') : null;
     }
 
     private transformToArticle(hitContent: any): Article {
         const article: Article = new Article();
-        article.author = hitContent.author;
+        article.author = sanitize(hitContent.author, noHtmlRule);
         article.createdAt = hitContent.createdAt;
-        article.document = hitContent.document;
+        article.document = sanitize(hitContent.document, allowCleanTagsRule);
         article.id = hitContent.id;
-        article.title = hitContent.title;
+        article.title = sanitize(hitContent.title, noHtmlRule);
         article.updatedAt = hitContent.updatedAt;
         return article;
     }

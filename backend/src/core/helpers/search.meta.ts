@@ -1,6 +1,6 @@
 export interface SearchMeta {
     count: number;
-    suggest: string[];
+    suggest: string | null;
 }
 
 export interface WithSearchMeta<T> {

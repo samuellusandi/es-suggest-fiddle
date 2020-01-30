@@ -5,7 +5,6 @@ module.exports = {
             settings: {
                 index: {
                     number_of_shards: 1,
-                    max_ngram_diff: 18,
                     analysis: {
                         analyzer: {
                             title_analyzer: {

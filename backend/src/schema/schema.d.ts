@@ -15,7 +15,7 @@ export interface Article {
 }
 
 export interface ArticleSearchMeta {
-    suggest: string[];
+    suggest?: string;
     count: number;
 }
 
