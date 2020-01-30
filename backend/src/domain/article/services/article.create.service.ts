@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 import { ESSearchService } from '../../../core/es/services/es.service';
 import { ARTICLES_INDEX } from '../constants';
 import { Article } from '../entities/article.entity';
+import { verifyContent } from '../helpers/verifier';
 
 @Injectable()
 export class CreateArticleService {
@@ -19,6 +20,9 @@ export class CreateArticleService {
     }
 
     public async createArticle(title: string, author: string, document: string): Promise<Article> {
+        if (!verifyContent(title, author, document)) {
+            throw new Error('Content does not meet criteria.');
+        }
         const article = await this.articleRepository.save({author, title, document});
         await this.esClient.index({
             body: {
@@ -27,6 +31,7 @@ export class CreateArticleService {
                 document: article.document,
                 id: article.id,
                 title: article.title,
+                titleCompletion: [article.title, ...article.title.split(/\s+/)],
                 updatedAt: article.updatedAt,
             },
             index: ARTICLES_INDEX,

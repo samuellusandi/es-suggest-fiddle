@@ -11,10 +11,11 @@ export interface Article {
     author: string;
     document: string;
     createdAt: string;
+    updatedAt: string;
 }
 
 export interface ArticleSearchMeta {
-    suggest: string[];
+    suggest?: string;
     count: number;
 }
 
@@ -30,7 +31,13 @@ export interface IMutation {
 }
 
 export interface IQuery {
-    readManyArticles(limit?: number): Article[] | Promise<Article[]>;
-    readArticleById(id?: string): Article | Promise<Article>;
+    readManyArticles(offset?: number, limit?: number): Article[] | Promise<Article[]>;
+    readArticleById(id: string): Article | Promise<Article>;
     searchArticle(title: string): ArticleSearchResult | Promise<ArticleSearchResult>;
+    autoCompleteTitle(prefix: string): TitleSuggestionResult[] | Promise<TitleSuggestionResult[]>;
+}
+
+export interface TitleSuggestionResult {
+    title: string;
+    id: string;
 }

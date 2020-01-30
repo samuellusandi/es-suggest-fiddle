@@ -52,6 +52,9 @@ module.exports = {
                         },
                     }
                 },
+                titleCompletion: {
+                    type: 'search_as_you_type',
+                },
                 createdAt: { type: 'date' },
                 updatedAt: { type: 'date' },
             },

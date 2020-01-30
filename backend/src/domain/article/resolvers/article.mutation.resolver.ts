@@ -19,7 +19,7 @@ export class ArticleMutationResolver {
         @Args('author') author: string,
         @Args('document') document: string,
     ): Promise<Article> {
-        return this.createArticleService.createArticle(title, author, document);
+        return await this.createArticleService.createArticle(title, author, document);
     }
 
     @Mutation()
@@ -35,6 +35,6 @@ export class ArticleMutationResolver {
         @Args('author') author: string,
         @Args('document') document: string,
     ): Promise<Article> {
-        return this.updateArticleService.updateArticle(id, title, author, document);
+        return await this.updateArticleService.updateArticle(id, title, author, document);
     }
 }

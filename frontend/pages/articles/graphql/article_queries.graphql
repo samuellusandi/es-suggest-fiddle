@@ -1,0 +1,44 @@
+query readArticles($offset: Int, $limit: Int) {
+    readManyArticles(offset: $offset, limit: $limit) {
+        id
+        title
+        author
+        document
+        createdAt
+        updatedAt
+    }
+}
+
+query readArticleById($id: String!) {
+    readArticleById(id: $id) {
+        id
+        title
+        author
+        document
+        createdAt
+        updatedAt
+    }
+}
+
+query autoComplete($prefix: String!) {
+    autoCompleteTitle(prefix: $prefix) {
+        id
+        title
+    }
+}
+
+query searchArticle($title: String!) {
+    searchArticle(title: $title) {
+        content {
+            id
+            title
+            author
+            document
+            createdAt
+            updatedAt
+        }
+        meta {
+            suggest
+        }
+    }
+}

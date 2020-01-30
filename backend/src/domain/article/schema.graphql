@@ -4,10 +4,11 @@ type Article {
     author: String!
     document: String!
     createdAt: String!
+    updatedAt: String!
 }
 
 type ArticleSearchMeta {
-    suggest: [String]!
+    suggest: String
     count: Int!
 }
 
@@ -16,19 +17,25 @@ type ArticleSearchResult {
     meta: ArticleSearchMeta!
 }
 
+type TitleSuggestionResult {
+    title: String!
+    id: String!
+}
+
 type Query {
-    readManyArticles(limit: Int): [Article]!
-    readArticleById(id: String): Article
+    readManyArticles(offset: Int, limit: Int): [Article]!
+    readArticleById(id: String!): Article
     searchArticle(title: String!): ArticleSearchResult!
+    autoCompleteTitle(prefix: String!): [TitleSuggestionResult]!
 }
 
 type Mutation {
-    createArticle(title: String!, author: String!, document: String!): Article
+    createArticle(title: String!, author: String!, document: String!): Article!
     updateArticle(
         id: String!,
         title: String,
         author: String,
         document: String
-    ): Article
-    deleteArticle(id: String!): Int
+    ): Article!
+    deleteArticle(id: String!): Int!
 }

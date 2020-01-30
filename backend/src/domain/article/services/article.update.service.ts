@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 import { ESSearchService } from '../../../core/es/services/es.service';
 import { ARTICLES_INDEX } from '../constants';
 import { Article } from '../entities/article.entity';
+import { verifyContent } from '../helpers/verifier';
 
 @Injectable()
 export class UpdateArticleService {
@@ -28,12 +29,20 @@ export class UpdateArticleService {
         if (!article) {
             throw new Error(`Article with id ${id} not found.`);
         }
+        if (!verifyContent(
+            title || article.title,
+            author || article.author,
+            document || article.document,
+        )) {
+            throw new Error('Content does not meet criteria.');
+        }
 
         let changed = true;
         const script = [];
         if (title) {
             article.title = title;
             script.push(`ctx._source.title='${title}'`);
+            script.push(`ctx._source.titleCompletion='${[title, ...title.split(/\s+/)]}'`);
             changed = true;
         }
         if (author) {
