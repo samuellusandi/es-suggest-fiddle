@@ -39,3 +39,7 @@ type Mutation {
     ): Article!
     deleteArticle(id: String!): Int!
 }
+
+type Subscription {
+    articleCreated: Article!
+}

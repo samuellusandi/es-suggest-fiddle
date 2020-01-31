@@ -1,10 +1,11 @@
 import { Client } from '@elastic/elasticsearch';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { RedisPubSub } from 'graphql-redis-subscriptions';
 import { Repository } from 'typeorm';
 
 import { ESSearchService } from '../../../core/es/services/es.service';
-import { ARTICLES_INDEX } from '../constants';
+import { ARTICLES_INDEX, SUBSCRIPTIONS_ARTICLE_CREATED } from '../constants';
 import { Article } from '../entities/article.entity';
 import { verifyContent } from '../helpers/verifier';
 
@@ -14,6 +15,7 @@ export class CreateArticleService {
 
     public constructor(
         @InjectRepository(Article) private readonly articleRepository: Repository<Article>,
+        @Inject('PUB_SUB') private readonly pubSub: RedisPubSub,
         esService: ESSearchService,
     ) {
         this.esClient = esService.getClient();
@@ -37,6 +39,9 @@ export class CreateArticleService {
             index: ARTICLES_INDEX,
         });
         await this.esClient.indices.refresh({ index: ARTICLES_INDEX });
+        await this.pubSub.publish(SUBSCRIPTIONS_ARTICLE_CREATED, {
+            articleCreated: article,
+        });
         return article;
     }
 }

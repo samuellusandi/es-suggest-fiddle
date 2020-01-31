@@ -1,8 +1,34 @@
 <template>
   <div class="container mx-auto py-4">
-    <div>
-      List all Articles and Search
+    <div
+      v-if="notify > 0"
+      class="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md"
+      role="alert"
+    >
+      <div class="flex">
+        <div class="py-1">
+          <svg
+            class="fill-current h-6 w-6 text-teal-500 mr-4"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+          >
+            <path
+              d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z"
+            />
+          </svg>
+        </div>
+        <div>
+          <p class="font-bold">A new article was added!</p>
+          <p class="text-sm">
+            The articles list have been updated! {{ notify }} new article(s)
+            have been added since you last refreshed this page.
+          </p>
+        </div>
+      </div>
     </div>
+    <h2 class="text-xl my-5">
+      All Articles
+    </h2>
     <div class="my-5">
       <input
         v-on:input="getSuggestions"
@@ -11,7 +37,7 @@
         type="text"
         placeholder="Start Typing for Completion"
       />
-      <div class="my-3">Search results:</div>
+      <div v-if="suggestions.length > 0" class="my-3">Search results:</div>
       <div v-for="suggestion in suggestions" v-bind:key="suggestion.i">
         <nuxt-link
           :to="'/articles/detail?id=' + suggestion.id"
@@ -71,7 +97,10 @@
       </table>
     </div>
     <div class="mt-5 text-center">
-      <button v-on:click="getArticles(offset, limit)" class="text-blue-500">
+      <button
+        v-on:click="getArticles(articles.length, limit)"
+        class="text-blue-500"
+      >
         Load more...
       </button>
     </div>
@@ -80,6 +109,7 @@
 
 <script>
 import articleQueries from './graphql/article_queries'
+import articleSubscriptions from './graphql/article_subscriptions'
 
 export default {
   data() {
@@ -87,12 +117,35 @@ export default {
       articles: [],
       prefix: '',
       suggestions: [],
-      offset: 0,
-      limit: 5
+      limit: 5,
+      notify: 0
+    }
+  },
+  apollo: {
+    $subscribe: {
+      articleCreated: {
+        query: articleSubscriptions.articleCreated,
+        result(data) {
+          const article = data.data.articleCreated
+          for (let i = 0; i < this.articles.length; ++i) {
+            this.articles[i].increment += 1
+          }
+          this.articles.unshift({
+            increment: 0,
+            id: article.id,
+            title: article.title,
+            author: article.author,
+            document: article.document,
+            createdAt: article.createdAt,
+            updatedAt: article.updatedAt
+          })
+          this.notify++
+        }
+      }
     }
   },
   beforeMount() {
-    this.getArticles(this.offset, this.limit)
+    this.getArticles(0, this.limit)
   },
   methods: {
     getArticles(offset, limit) {
@@ -109,7 +162,7 @@ export default {
           data = data.data.readManyArticles
           for (; i < data.length; ++i) {
             this.articles.push({
-              increment: i + this.offset,
+              increment: i + this.articles.length,
               id: data[i].id,
               title: data[i].title,
               author: data[i].author,
@@ -118,7 +171,6 @@ export default {
               updatedAt: data[i].updatedAt
             })
           }
-          this.offset += data.length
         })
     },
     limitString(input, length) {

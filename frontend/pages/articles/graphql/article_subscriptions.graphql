@@ -1,0 +1,10 @@
+subscription articleCreated {
+    articleCreated {
+        id
+        title
+        author
+        document
+        createdAt
+        updatedAt
+    }
+}
