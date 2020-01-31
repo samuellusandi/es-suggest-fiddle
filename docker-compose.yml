@@ -37,6 +37,17 @@ services:
       app:
         ipv4_address: 172.16.0.3
 
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./data/redis:/data
+    restart: unless-stopped
+    networks:
+      app:
+        ipv4_address: 172.16.0.4
+      
 networks:
   app:
     driver: bridge

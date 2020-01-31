@@ -11,6 +11,7 @@ export const gqlConfig: GqlModuleOptions = {
     definitions: {
         path: join(process.cwd(), 'src/schema/schema.d.ts'),
     },
+    installSubscriptionHandlers: true,
     playground: configs.NODE_ENV === 'development',
     typePaths: ['./src/domain/**/*.graphql'],
 

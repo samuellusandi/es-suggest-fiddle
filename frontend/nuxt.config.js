@@ -83,6 +83,7 @@ export default {
     clientConfigs: {
       default: {
         httpEndpoint: 'http://localhost:4000/graphql',
+        wsEndpoint: 'ws://localhost:4000/graphql',
         // optional
         // See https://www.apollographql.com/docs/link/links/http.html#options
         httpLinkOptions: {

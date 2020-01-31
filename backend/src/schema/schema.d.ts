@@ -37,6 +37,10 @@ export interface IQuery {
     autoCompleteTitle(prefix: string): TitleSuggestionResult[] | Promise<TitleSuggestionResult[]>;
 }
 
+export interface ISubscription {
+    articleCreated(): Article | Promise<Article>;
+}
+
 export interface TitleSuggestionResult {
     title: string;
     id: string;
