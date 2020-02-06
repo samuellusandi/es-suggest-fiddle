@@ -7,7 +7,13 @@ const article = require('./article');
 dotenv.config();
 const config = process.env;
 const esNode = config.ES_NODE;
-const esClient = new es.Client({ node: esNode });
+const esClient = new es.Client({
+    node: esNode,
+    auth: {
+        username: config.ES_USERNAME,
+        password: config.ES_PASSWORD,
+    },
+});
 const dbClient = new pg.Client({
     host: config.DATABASE_HOST,
     port: config.DATABASE_PORT,
