@@ -1,16 +1,14 @@
+import { Client } from '@elastic/elasticsearch';
 import { Injectable } from '@nestjs/common';
 
-import { Client } from '@elastic/elasticsearch';
-import { configs } from 'src/core/configs/config';
+import { esConfig } from 'src/core/configs/elasticsearch';
 
 @Injectable()
 export class ESSearchService {
     private client: Client;
 
     public constructor() {
-        this.client = new Client({
-            node: configs.ES_NODE,
-        });
+        this.client = new Client(esConfig);
     }
 
     public getClient(): Client {
