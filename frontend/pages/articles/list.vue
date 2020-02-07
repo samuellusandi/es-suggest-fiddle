@@ -181,7 +181,7 @@ export default {
       return modified
     },
     getSuggestions() {
-      this.suggestions = []
+      const suggestions = []
       this.$apollo
         .query({
           query: articleQueries.autoComplete,
@@ -193,13 +193,14 @@ export default {
           data = data.data.autoCompleteTitle
           const maxSuggestion = data.length > 5 ? 5 : data.length
           for (let i = 0; i < maxSuggestion; ++i) {
-            this.suggestions.push({
+            suggestions.push({
               i,
               id: data[i].id,
               title: data[i].title
             })
           }
         })
+      this.suggestions = suggestions
     }
   }
 }
