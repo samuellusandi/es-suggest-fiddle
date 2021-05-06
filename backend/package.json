@@ -42,7 +42,7 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.0",
     "rxjs": "^6.5.4",
-    "sanitize-html": "^1.21.1",
+    "sanitize-html": "^2.3.2",
     "typeorm": "^0.2.22"
   },
   "devDependencies": {
